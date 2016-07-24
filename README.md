@@ -20,12 +20,13 @@
 
 <h5>Second, Bamazon Manager</h5>
 
-<p align="center">
+<p align="left">
   1. Table is shown along with a prompt giving the manager four options, shown as below: 
   <br/>
   <img src="img/m001.png" width="700"/>
   <br/>
   2. If manger choose option 1, it will list all of the products available for sale, shown as below:
+  <br/>
   <img src="img/m002.png" width="700"/>
    <br/>
   3. If manger choose option 2, it will list all items for which the quantity available in stores is less than 5
