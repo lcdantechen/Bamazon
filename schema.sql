@@ -32,4 +32,3 @@ Values (0001, "Collagen","Food Ingredient",8.75,2300),
 
 
 
-UPDATE products SET StockQuantity = 2300 WHERE ProductName = "Collagen"
