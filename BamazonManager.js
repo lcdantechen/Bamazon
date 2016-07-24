@@ -30,6 +30,12 @@ var showOptions =  function() {
         } else if (user.choice == opt2) {
             viewLowInventory();
 
+        } else if (user.choice == opt3) {
+            
+            addMore();
+        } else if (user.choice == opt4) {
+            addNewProduct();
+
         }
 
         });
@@ -76,6 +82,128 @@ var viewLowInventory = function() {
        
     });
 };
+
+var addMore = function(res) {
+       
+        inquirer.prompt([
+        {
+            type: 'input',
+            name: 'choice',
+            message: 'What product would you like to add?'
+        }
+        ]).then(function(val) {
+
+                //SET THE VAR correct TO FALSE SO AS TO MAKE SURE THE USER INPUTS A VALID PRODUCT NAME//
+                var correct = false;
+                var record;
+                connection.query('SELECT * FROM products', function(err, res) {
+                        //LOOPS THROUGH THE MYSQL TABLE TO CHECK THAT THE PRODUCT THEY WANTED EXISTS//
+                        for (var i = 0; i < res.length; i++) {  
+                                                    
+                            //1. TODO: IF THE PRODUCT EXISTS, SET correct = true and ASK THE USER TO SEE HOW MANY OF THE PRODUCT THEY WOULD LIKE TO BUY//
+                            if (val.choice == res[i].ProductName || val.choice == res[i].ProductName.replace(/\s+/g, '').toLowerCase()) {
+                                console.log("the product you pick is"+ val.choice);
+                                correct = true;
+                                record = res[i];
+
+                            }
+                            //2. TODO: CHECK TO SEE IF THE AMOUNT REQUESTED IS LESS THAN THE AMOUNT THAT IS AVAILABLE//                       
+                            //3. TODO: UPDATE THE MYSQL TO REDUCE THE StockQuanaity by the THE AMOUNT REQUESTED  - UPDATE COMMAND!
+                            //4. TODO: SHOW THE TABLE again by calling the function that makes the table
+                        }
+
+
+                        if (correct) {
+                                inquirer.prompt([
+                                {
+                                    type: 'input',
+                                    name: 'quantity',
+                                    message: 'How many would you like to add?'
+                                }
+                                ]).then(function(qua) {
+                                    console.log(qua.quantity);  
+                                    console.log(record.StockQuantity);
+                                    connection.query('SELECT * FROM products', function(err, res) {
+                                        if (err) throw err;                  
+                                        /*qua.quantity =  qua.quantity + record.StockQuantity;
+*/                                        
+                                        connection.query('UPDATE products SET StockQuantity = ? WHERE ItemID = ? ', [qua.quantity, record.ItemID])
+                                        makeTable();
+                                    });
+
+                                    
+                                });
+                                        
+
+                            }
+                        
+                            else {
+                            console.log('pLease enter a valid item');
+                            promptCustomer(res);
+                            }
+                });
+
+            });
+};
+
+var addNewProduct = function() {
+
+            inquirer.prompt([
+            {
+                type: 'input',
+                name: 'newProduct',
+                message: 'What product you would like to add?'
+            },
+            {
+                type: 'input',
+                name: 'newID',
+                message: 'What is the product ID (Number)?'
+            }
+            ]).then(function(newItem) {
+                var IDisNumber = true;
+                if (isNaN(newItem.newID)) {
+                    IDisNumber = false;
+                    console.log("Please enter a Number for you New Item's ID!")
+                    addNewProduct();
+                };
+                if (IDisNumber) {
+                    console.log("Your ID is generated!")
+
+                    inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'newDepartment',
+                            message: 'What is the DepartmentName?'
+                        },
+                        {
+                            type: 'input',
+                            name: 'newPrice',
+                            message: 'What is the price for this product?'
+                        },
+                        {
+                            type: 'input',
+                            name: 'newStock',
+                            message: 'How many products would you like to add?'
+                        }
+                        ]).then(function(newItem2) {
+                            console.log("your product is generated!")
+                             connection.query('Insert into products(ItemID, ProductName, DepartmentName, Price, StockQuantity) Values("' + newItem2.newID + '","' + newItem2.newProduct + '","' + newItem2.newDepartment + '","' + newItem2.newPrice + '","'+ newStock + ");", function(err, res) {
+                                if (err) throw err;
+                                console.log("Item added to Bamazon!");
+                                makeTable();
+                     
+
+                             })
+                            
+
+                        });
+                };
+
+
+                
+            });
+
+}
 
 
 

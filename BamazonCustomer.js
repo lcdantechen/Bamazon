@@ -1,7 +1,6 @@
 //INITIALIZES THE NPM PACKAGES USED//
 var mysql = require('mysql');
 var inquirer = require('inquirer');
-
 //INITIALIZES THE CONNECTION VARIABLE TO SYNC WITH A MYSQL DATABASE//
 var connection = mysql.createConnection({
     host: "localhost",
