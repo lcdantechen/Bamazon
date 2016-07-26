@@ -122,12 +122,16 @@ var addMore = function(res) {
                                 }
                                 ]).then(function(qua) {
                                     console.log(qua.quantity);  
+
                                     console.log(record.StockQuantity);
                                     connection.query('SELECT * FROM products', function(err, res) {
                                         if (err) throw err;                  
-                                        /*qua.quantity =  qua.quantity + record.StockQuantity;
-*/                                        
-                                        connection.query('UPDATE products SET StockQuantity = ? WHERE ItemID = ? ', [qua.quantity, record.ItemID])
+                                        /*qua.quantity =  qua.quantity + record.StockQuantity;*/
+                                        var stockQ = parseInt(record.StockQuantity);
+                                        var addQ = parseInt(qua.quantity);
+                                        stockQ = stockQ + addQ;
+                                        
+                                        connection.query('UPDATE products SET StockQuantity = ? WHERE ItemID = ? ', [stockQ, record.ItemID])
                                         makeTable();
                                     });
 
@@ -188,6 +192,7 @@ var addNewProduct = function() {
                         ]).then(function(newItem2) {
                             console.log("your product is generated!")
                              connection.query('Insert into products(ItemID, ProductName, DepartmentName, Price, StockQuantity) Values("' + newItem2.newID + '","' + newItem2.newProduct + '","' + newItem2.newDepartment + '","' + newItem2.newPrice + '","'+ newStock + ");", function(err, res) {
+                                
                                 if (err) throw err;
                                 console.log("Item added to Bamazon!");
                                 makeTable();
